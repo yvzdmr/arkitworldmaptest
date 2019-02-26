@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "333001617710",
+    "firebase_url": "https://arworld-a20cf.firebaseio.com",
+    "project_id": "arworld-a20cf",
+    "storage_bucket": "arworld-a20cf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:333001617710:android:cee9fea1b2547f52",
+        "android_client_info": {
+          "package_name": "com.vrm.arworld"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "333001617710-39lu0u6snp1jb5tv2n6dr7tb9vunrnme.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD-QlkGxvLgLlEAi7TZeK_l1fjQrcJcCjI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
