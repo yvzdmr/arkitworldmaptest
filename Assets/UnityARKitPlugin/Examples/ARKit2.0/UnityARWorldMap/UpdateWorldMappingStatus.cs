@@ -21,6 +21,7 @@ public class UpdateWorldMappingStatus : MonoBehaviour
 	{
 		text.text = cam.worldMappingStatus.ToString ();
 		tracking.text = cam.trackingState.ToString () + " " + cam.trackingReason.ToString ();
+        
 	}
 
 	void OnDestroy()
