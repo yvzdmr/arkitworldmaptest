@@ -6,25 +6,37 @@ using UnityEngine.XR.iOS;
 public class ObjectPlacer : MonoBehaviour
 {
 
-    public GameObject prefab;
+    public HologramVisualizer hologramVisualizerPrefab;
 
-    List<GameObject> gos = new List<GameObject>();
 
+    List<HologramVisualizer> hologramVisualizers = new List<HologramVisualizer>();
 
     void Update()
     {
         if (Input.GetMouseButtonDown(0)) {
 
             Pose? pose = GetRayPose(Input.mousePosition);
-            if (pose != null)
-                Instantiate(pose.Value);
+            if (pose != null) {
+                var hologram = new Hologram { bornPose = pose.Value, anchoredPose = pose.Value };
+                VisualizeHologram(hologram);
+            }
+                
         }
         
     }
 
+    void VisualizeHologram(Hologram hologram) {
+        var visualizer = Instantiate(hologramVisualizerPrefab);
+        visualizer.Hologram = hologram;
+        hologramVisualizers.Add(visualizer);
+    }
+
     public void Clear() {
-        foreach (GameObject go in gos)
-            Destroy(go);
+        while(hologramVisualizers.Count > 0) {
+            var hv = hologramVisualizers[0];
+            hologramVisualizers.RemoveAt(0);
+            Destroy(hv.gameObject);
+        }
     }
 
     private void OnDestroy() {
@@ -35,12 +47,11 @@ public class ObjectPlacer : MonoBehaviour
     }
 
     public void Save() {
-        var hologramMap = new HologramMap();
-        foreach(GameObject g in gos) {
-            hologramMap.list.Add(new Pose(g.transform.position, g.transform.rotation));
+        HologramMap map = new HologramMap();
+        foreach(HologramVisualizer hv in hologramVisualizers) {
+            map.list.Add(hv.Hologram);
         }
-
-        var json = JsonUtility.ToJson(hologramMap);
+        var json = JsonUtility.ToJson(map);
         PlayerPrefs.SetString("hologramMap", json);
         PlayerPrefs.Save();
     }
@@ -48,19 +59,14 @@ public class ObjectPlacer : MonoBehaviour
     public void Load() {
         var json = PlayerPrefs.GetString("hologramMap");
         if (!string.IsNullOrEmpty(json)) {
-            var hologramMap = JsonUtility.FromJson<HologramMap>(json);
-            foreach(Pose p in hologramMap.list) {
-                Instantiate(p);
+            var map = JsonUtility.FromJson<HologramMap>(json);
+            foreach(Hologram hologram in map.list) {
+                VisualizeHologram(hologram);
             }
         }
     }
 
 
-    void Instantiate(Pose pose) {
-        var obj = Instantiate(prefab, pose.position, pose.rotation);
-        gos.Add(obj);
-        obj.AddComponent<UnityARUserAnchorComponent>();
-    }
 
     Pose? GetRayPose(Vector2 screenPos) {
         var screenPosition = Camera.main.ScreenToViewportPoint(screenPos);
@@ -85,9 +91,19 @@ public class ObjectPlacer : MonoBehaviour
 
 [System.Serializable]
 public class HologramMap {
-    public List<Pose> list = new List<Pose>();
+    public List<Hologram> list = new List<Hologram>();
 
     public HologramMap() {
+
+    }
+}
+
+[System.Serializable]
+public class Hologram {
+    public Pose bornPose;
+    public Pose anchoredPose;
+
+    public Hologram() {
 
     }
 }
