@@ -9,9 +9,17 @@ namespace UnityEngine.XR.iOS
 		public float maxRayDistance = 30.0f;
 		public LayerMask collisionLayer = 1 << 10;  //ARKitPlane layer
 
-        bool HitTestWithResultType (ARPoint point, ARHitTestResultType resultTypes)
+        bool HitTestWithResultType ()
         {
-            List<ARHitTestResult> hitResults = UnityARSessionNativeInterface.GetARSessionNativeInterface ().HitTest (point, resultTypes);
+
+            var screenPosition = Camera.main.ScreenToViewportPoint(Input.mousePosition);
+            ARPoint point = new ARPoint {
+                x = screenPosition.x,
+                y = screenPosition.y
+            };
+
+
+            List<ARHitTestResult> hitResults = UnityARSessionNativeInterface.GetARSessionNativeInterface ().HitTest (point, ARHitTestResultType.ARHitTestResultTypeExistingPlaneUsingExtent);
             if (hitResults.Count > 0) {
                 foreach (var hitResult in hitResults) {
                     Debug.Log ("Got hit!");

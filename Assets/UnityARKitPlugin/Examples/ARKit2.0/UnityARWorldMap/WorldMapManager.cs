@@ -85,12 +85,6 @@ public class WorldMapManager : MonoBehaviour
 			//we have an operator that converts a ARWorldMap to a serializableARWorldMap
 			serializedWorldMap = worldMap;
 			Debug.Log ("ARWorldMap serialized to serializableARWorldMap");
-            byte[] mapData = worldMap.SerializeToByteArray();
-            if (mapData != null && mapData.Length > 0)
-                FirebaseUploader.Upload(mapData);
-            else {
-                Debug.LogError("Missing map data");
-            }
 		}
 	}
 
@@ -100,15 +94,8 @@ public class WorldMapManager : MonoBehaviour
 		session.GetCurrentWorldMapAsync(OnWorldMapSerialized);
 	}
 
-	public async void LoadSerialized()
+	public void LoadSerialized()
 	{
-        byte[] mapData = await FirebaseUploader.Download();
-        if (mapData != null && mapData.Length > 0)
-            serializedWorldMap = new serializableARWorldMap(mapData);
-        else {
-            Debug.Log("No world map data found");
-            return;
-        }
 
 		Debug.Log("Loading ARWorldMap from serialized data");
 		//we have an operator that converts a serializableARWorldMap to a ARWorldMap
