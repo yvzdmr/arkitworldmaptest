@@ -10,10 +10,6 @@ public class ObjectPlacer : MonoBehaviour
 
     List<GameObject> gos = new List<GameObject>();
 
-    void Start()
-    {
-        Load();
-    }
 
     void Update()
     {

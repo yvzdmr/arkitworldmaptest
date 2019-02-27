@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.XR.iOS;
 
@@ -54,18 +55,38 @@ public class UnityARCameraManager : MonoBehaviour {
     void Start () {
 
         m_session = UnityARSessionNativeInterface.GetARSessionNativeInterface();
-
         Application.targetFrameRate = 60;
-        
-        var config = sessionConfiguration;
-        if (config.IsSupported) {
-            m_session.RunWithConfig (config);
-            UnityARSessionNativeInterface.ARFrameUpdatedEvent += FirstFrameUpdate;
+        Screen.sleepTimeout = int.MaxValue;
+
+        if (File.Exists(WorldMapManager.path)) {
+            RunSavedMap();
         }
+        else {
+            RunDefault();
+        }
+
+        UnityARSessionNativeInterface.ARFrameUpdatedEvent += FirstFrameUpdate;
 
         if (m_camera == null) {
             m_camera = Camera.main;
         }
+    }
+
+    void RunDefault() {
+        var config = sessionConfiguration;
+        if (config.IsSupported)
+            m_session.RunWithConfig(config);
+    }
+
+    void RunSavedMap() {
+        var config = sessionConfiguration;
+        var worldMap = ARWorldMap.Load(WorldMapManager.path);
+
+        config.worldMap = worldMap;
+        UnityARSessionRunOption runOption = UnityARSessionRunOption.ARSessionRunOptionRemoveExistingAnchors | UnityARSessionRunOption.ARSessionRunOptionResetTracking;
+
+        Debug.Log("Restarting session with worldMap");
+        m_session.RunWithConfigAndOptions(config, runOption);
     }
 
     void OnDestroy()

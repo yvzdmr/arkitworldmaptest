@@ -37,7 +37,7 @@ public class WorldMapManager : MonoBehaviour
         get { return UnityARSessionNativeInterface.GetARSessionNativeInterface(); }
     }
 
-    static string path
+    public static string path
     {
         get { return Path.Combine(Application.persistentDataPath, "myFirstWorldMap.worldmap"); }
     }
@@ -49,6 +49,10 @@ public class WorldMapManager : MonoBehaviour
             worldMap.Save(path);
             Debug.LogFormat("ARWorldMap saved to {0}", path);
         }
+    }
+
+    private void OnApplicationQuit() {
+        Save();
     }
 
     public void Save()
