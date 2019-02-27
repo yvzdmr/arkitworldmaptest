@@ -25,7 +25,16 @@ public class ObjectPlacer : MonoBehaviour
         }
         
     }
+
+    public void Clear() {
+        foreach (GameObject go in gos)
+            Destroy(go);
+    }
+
     private void OnDestroy() {
+        Save();
+    }
+    private void OnApplicationQuit() {
         Save();
     }
 
@@ -37,7 +46,7 @@ public class ObjectPlacer : MonoBehaviour
 
         var json = JsonUtility.ToJson(hologramMap);
         PlayerPrefs.SetString("hologramMap", json);
-
+        PlayerPrefs.Save();
     }
 
     public void Load() {
@@ -54,6 +63,7 @@ public class ObjectPlacer : MonoBehaviour
     void Instantiate(Pose pose) {
         var obj = Instantiate(prefab, pose.position, pose.rotation);
         gos.Add(obj);
+        obj.AddComponent<UnityARUserAnchorComponent>();
     }
 
     Pose? GetRayPose(Vector2 screenPos) {
