@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 using UnityEngine.XR.iOS;
 
 public class ObjectPlacer : MonoBehaviour
@@ -14,7 +15,7 @@ public class ObjectPlacer : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) && !IsPointerOverUIObject()) {
+        if (Input.GetMouseButtonDown(0) && !isLocked && !IsPointerOverUIObject()) {
 
             Pose? pose = GetRayPose(Input.mousePosition);
             if (pose != null) {
@@ -24,6 +25,19 @@ public class ObjectPlacer : MonoBehaviour
                 
         }
         
+    }
+
+    private void Start() {
+        VisualizeLockedText();
+    }
+    public Text isLockedText;
+    bool isLocked = true;
+    public void ToggleLock() {
+        isLocked = !isLocked;
+        VisualizeLockedText();
+    }
+    void VisualizeLockedText() {
+        isLockedText.text = "Lock " + isLocked;
     }
 
     void VisualizeHologram(Hologram hologram) {
