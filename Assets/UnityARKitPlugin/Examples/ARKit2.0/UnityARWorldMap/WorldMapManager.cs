@@ -56,6 +56,11 @@ public class WorldMapManager : MonoBehaviour
             Save();
     }
 
+    public void DeleteMap() {
+        if (File.Exists(path))
+            File.Delete(path);
+    }
+
     public void Save()
     {
         session.GetCurrentWorldMapAsync(OnWorldMap);
