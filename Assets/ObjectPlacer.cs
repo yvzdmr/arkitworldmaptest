@@ -46,7 +46,10 @@ public class ObjectPlacer : MonoBehaviour
         Save();
     }
 
+    bool isLoaded = false;
     public void Save() {
+        if (!isLoaded)
+            return;
         HologramMap map = new HologramMap();
         foreach(HologramVisualizer hv in hologramVisualizers) {
             map.list.Add(hv.Hologram);
@@ -63,6 +66,7 @@ public class ObjectPlacer : MonoBehaviour
             foreach(Hologram hologram in map.list) {
                 VisualizeHologram(hologram);
             }
+            isLoaded = true;
         }
     }
 
