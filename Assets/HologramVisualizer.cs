@@ -11,7 +11,8 @@ public class HologramVisualizer : MonoBehaviour
     GameObject bornCube;
     GameObject anchoredCube;
 
-    Hologram hologram;
+
+    Hologram hologram = null;
     public Hologram Hologram {
         get {
             return new Hologram() { bornPose = hologram.bornPose, anchoredPose = new Pose { position = anchoredCube.transform.position, rotation = anchoredCube.transform.rotation } };

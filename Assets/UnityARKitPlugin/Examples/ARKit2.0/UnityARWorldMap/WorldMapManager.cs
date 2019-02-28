@@ -52,7 +52,8 @@ public class WorldMapManager : MonoBehaviour
     }
 
     private void OnApplicationQuit() {
-        Save();
+        if (m_LastReason != ARTrackingStateReason.ARTrackingStateReasonInitializing && m_LastReason != ARTrackingStateReason.ARTrackingStateReasonRelocalizing)
+            Save();
     }
 
     public void Save()

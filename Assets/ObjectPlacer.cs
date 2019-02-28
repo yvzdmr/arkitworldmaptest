@@ -56,11 +56,13 @@ public class ObjectPlacer : MonoBehaviour
         }
         var json = JsonUtility.ToJson(map);
         PlayerPrefs.SetString("hologramMap", json);
+        Debug.Log("Saved Data " + json);
         PlayerPrefs.Save();
     }
 
     public void Load() {
         var json = PlayerPrefs.GetString("hologramMap");
+        Debug.Log("Loaded Data " + json);
         if (!string.IsNullOrEmpty(json)) {
             var map = JsonUtility.FromJson<HologramMap>(json);
             foreach(Hologram hologram in map.list) {
