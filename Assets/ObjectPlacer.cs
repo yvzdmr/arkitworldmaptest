@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.XR.iOS;
 
 public class ObjectPlacer : MonoBehaviour
@@ -13,7 +14,7 @@ public class ObjectPlacer : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0)) {
+        if (Input.GetMouseButtonDown(0) && !IsPointerOverUIObject()) {
 
             Pose? pose = GetRayPose(Input.mousePosition);
             if (pose != null) {
@@ -48,8 +49,10 @@ public class ObjectPlacer : MonoBehaviour
 
     bool isLoaded = false;
     public void Save() {
-        if (!isLoaded)
+        bool hasData = PlayerPrefs.GetString("hologramMap", "-1") != "-1";
+        if (hasData && !isLoaded)
             return;
+
         HologramMap map = new HologramMap();
         foreach(HologramVisualizer hv in hologramVisualizers) {
             map.list.Add(hv.Hologram);
@@ -68,8 +71,8 @@ public class ObjectPlacer : MonoBehaviour
             foreach(Hologram hologram in map.list) {
                 VisualizeHologram(hologram);
             }
-            isLoaded = true;
         }
+        isLoaded = true;
     }
 
 
@@ -92,6 +95,14 @@ public class ObjectPlacer : MonoBehaviour
         }
 
         return null;
+    }
+
+    private bool IsPointerOverUIObject() {
+        PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
+        eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
+        return results.Count > 0;
     }
 }
 
